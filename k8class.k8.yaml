@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8class
+spec:
+  type: LoadBalancer
+  selector:
+    app: k8class
+  ports:
+  - port: 4141
+    targetPort: 4343
+
+--- 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8class
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: k8class
+  template:
+    metadata:
+      labels:
+        app: k8class
+    spec:
+      containers:
+      - name: k8class
+        image: theoafactor/k8class:5.0.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 4343
